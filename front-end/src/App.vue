@@ -3,6 +3,8 @@
     <Header/>
     <Menu/>
     <Navigator/>
+    <Content/>
+    <Footer/>
   </div>
 </template>
 
@@ -11,11 +13,13 @@
 import Header from "./components/Header.vue";
 import Menu from "./components/Menu.vue";
 import Navigator from "./components/Navigator.vue";
+import Content from "./components/Content.vue";
+import Footer from "./components/Footer.vue";
 
 export default {
   name: "App",
   components: {
-    Header, Menu, Navigator,
+    Header, Menu, Footer, Navigator, Content,
   },
 };
 </script>
