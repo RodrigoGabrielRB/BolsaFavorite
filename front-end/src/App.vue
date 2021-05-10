@@ -2,6 +2,7 @@
   <div id="app">
     <Header/>
     <Menu/>
+    <Navigator/>
   </div>
 </template>
 
@@ -9,11 +10,12 @@
 //import HelloWorld from "./components/HelloWorld.vue";
 import Header from "./components/Header.vue";
 import Menu from "./components/Menu.vue";
+import Navigator from "./components/Navigator.vue";
 
 export default {
   name: "App",
   components: {
-    Header, Menu
+    Header, Menu, Navigator,
   },
 };
 </script>
