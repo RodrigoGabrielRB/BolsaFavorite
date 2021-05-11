@@ -62,7 +62,7 @@ export default {
                 flex-direction: column;
                 align-items: center;
                 padding: 20px;
-                width: calc(33.33% - 6px);
+                width: calc(33.50% - 6px);
                 margin-right:8px;
                 span{
                     margin-top:10px;

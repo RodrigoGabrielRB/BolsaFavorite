@@ -10,28 +10,33 @@
           </ul>
       </div>
       <div class="container__containerCards">
-          <div class="container__containerCards__card">
+          <div class="container__containerCards__card" @click="isModalAddCourseOpen = true">
             <div class="container__containerCards__card__plusCircle"><i class="fas fa-plus"></i></div>
             <p class="container__containerCards__card__title">Adicionar bolsa</p>
             <p class="container__containerCards__card__label">Clique aqui para adicionar bolsas de cursos do seu interesse</p>
           </div> 
-          <div class="container__containerCards__card">
+          <!-- <div class="container__containerCards__card">
             <div class="container__containerCards__card__plusCircle"><i class="fas fa-plus"></i></div>
             <p class="container__containerCards__card__title">Adicionar bolsa</p>
             <p class="container__containerCards__card__label">Clique aqui para adicionar bolsas de cursos do seu interesse</p>
-          </div> 
+          </div>  -->
       </div>
+      <Modal :isModalAddCourseOpen="isModalAddCourseOpen"/>
   </div>
 </template>
 
 <script>
+import  Modal  from './Modal'
+
 export default {
+    components: { Modal },
     data: () => ({
+        isModalAddCourseOpen: false,
         headerSemestre: [
             {id: 1, name: "Todos os semestres", isActive: true},
             {id: 2, name: "2º semestre de 2019", isActive: false},
             {id: 3, name: "1º semestre de 2020", isActive: false},
-        ]
+        ],
     }),
     methods: {
         active(item){
@@ -41,7 +46,7 @@ export default {
         desactiveAll(){
             this.headerSemestre.forEach( item => item.isActive = false)
         }
-    }
+    },
 }
 </script>
 

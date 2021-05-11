@@ -1,4 +1,4 @@
-import { HTTPClient } from '../utils/request'
+// import { HTTPClient } from '../utils/request'
 
 export default {
   getAllCourse: async () => {
