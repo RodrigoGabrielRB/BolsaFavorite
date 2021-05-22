@@ -1,12 +1,10 @@
 <template>
   <div class="card">
     <div class="card__checkbox">
-       <label class="chk">
-              <input
-                type="checkbox"
-              />
-              <span><i class="fas fa-check"></i></span>
-            </label>
+      <label class="chk">
+        <input type="checkbox" @click="selectCouse(course)" />
+        <span><i class="fas fa-check"></i></span>
+      </label>
     </div>
     <div class="card__logoUniversity">
       <img :src="course.university.logo_url" />
@@ -24,60 +22,65 @@
 
 <script>
 export default {
-    props: ["course"]
+  props: ["course"],
+  methods: {
+    selectCouse(course) {
+      console.log(course);
+      this.$emit("changeSelectedCourse", course.id);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-    
-    .card{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding:20px 0;
-        width: 100%;
-        border-top: 2px solid rgba(31, 45, 48, 0.2);
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  width: 100%;
+  border-top: 2px solid rgba(31, 45, 48, 0.2);
 
-        &__logoUniversity{
-            width:30%;
-            img{
-                max-width: 100%;
-            }
-        }
+  &__logoUniversity {
+    width: 30%;
+    img {
+      max-width: 100%;
+    }
+  }
 
-        &__course{
-            width:50%;
-            display: block;
-            font-size:1.2em;
+  &__course {
+    width: 50%;
+    display: block;
+    font-size: 1.2em;
 
-            &__name{
-                color: #18acc4;
-                font-weight: bolder;
-            }
-
-            &__level{
-                font-weight: normal;
-                margin-top: 4px;
-            }
-            &__discount{
-                margin-top: 20px;
-                font-weight: bolder;
-                color: #1F2D30;
-
-                span{
-                    color: #0FA866;
-                     font-weight: bolder;
-                }
-            }
-            &__price{
-                color: #0FA866;
-                margin-top: 4px;
-                font-weight: bolder;
-            }
-        }
+    &__name {
+      color: #18acc4;
+      font-weight: bolder;
     }
 
-    .chk input {
+    &__level {
+      font-weight: normal;
+      margin-top: 4px;
+    }
+    &__discount {
+      margin-top: 20px;
+      font-weight: bolder;
+      color: #1f2d30;
+
+      span {
+        color: #0fa866;
+        font-weight: bolder;
+      }
+    }
+    &__price {
+      color: #0fa866;
+      margin-top: 4px;
+      font-weight: bolder;
+    }
+  }
+}
+
+.chk input {
   display: none;
 }
 
@@ -87,7 +90,7 @@ export default {
   height: 26px;
   display: block;
   background-color: #fff;
-  border: 1px solid #1F2D30;
+  border: 1px solid #1f2d30;
 }
 
 .chk span i {

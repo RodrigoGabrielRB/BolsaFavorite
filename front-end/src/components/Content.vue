@@ -32,11 +32,16 @@
           Clique aqui para adicionar bolsas de cursos do seu interesse
         </p>
       </div>
-      <!-- <div class="container__containerCards__card">
-            <div class="container__containerCards__card__plusCircle"><i class="fas fa-plus"></i></div>
-            <p class="container__containerCards__card__title">Adicionar bolsa</p>
-            <p class="container__containerCards__card__label">Clique aqui para adicionar bolsas de cursos do seu interesse</p>
-          </div>  -->
+      <CardFavorite />
+      <div class="container__containerCards__card">
+        <div class="container__containerCards__card__plusCircle">
+          <i class="fas fa-plus"></i>
+        </div>
+        <p class="container__containerCards__card__title">Adicionar bolsa</p>
+        <p class="container__containerCards__card__label">
+          Clique aqui para adicionar bolsas de cursos do seu interesse
+        </p>
+      </div>
     </div>
     <Modal
       :isModalAddCourseOpen="isModalAddCourseOpen"
@@ -47,9 +52,10 @@
 
 <script>
 import Modal from "./Modal";
+import CardFavorite from "./CardFavorite";
 
 export default {
-  components: { Modal },
+  components: { Modal, CardFavorite },
   data: () => ({
     isModalAddCourseOpen: false,
     headerSemestre: [

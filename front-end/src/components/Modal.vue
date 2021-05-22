@@ -42,7 +42,12 @@
 
           <div>
             <label class="chk">
-              <input type="checkbox" @change="filteredCourse" v-model="filter.ead" name="A distancia" />
+              <input
+                type="checkbox"
+                @change="filteredCourse"
+                v-model="filter.ead"
+                name="A distancia"
+              />
               <span><i class="fas fa-check"></i></span>
             </label>
             <span class="labelName">A distância</span>
@@ -52,7 +57,13 @@
       <div class="modal__content__filter">
         <p>Até quando pode pagar?</p>
         <span class="moneyToPaid">R${{ filter.moneyToPaid }}</span>
-        <input type="range" @input="filteredCourse" v-model="filter.moneyToPaid" min="1" max="10000" />
+        <input
+          type="range"
+          @input="filteredCourse"
+          v-model="filter.moneyToPaid"
+          min="1"
+          max="10000"
+        />
       </div>
       <div class="modal__content__orderBy">
         <div>Resultado:</div>
@@ -68,22 +79,28 @@
           ></span>
         </div>
       </div>
-      
-    
       <div class="modal__content__list">
         <div
           class="modal__content__list__item"
           v-for="(course, index) in courseFiltered"
           :key="index"
         >
-          <CourseCard :course="course"/>
-          
+          <CourseCard
+            @changeSelectedCourse="changeSelectedCourse"
+            :course="course"
+          />
         </div>
       </div>
 
       <div class="modal__content__action">
-          <button class="button" @click="closeModalAddCourse">Cancelar</button>
-          <button class="button main">Adicionar bolsas(s)</button>
+        <button class="button" @click="closeModalAddCourse">Cancelar</button>
+        <button
+          class="button"
+          @click="addCourseToFavorite"
+          :class="courseSelected.length > 0 ? 'main' : 'disabled'"
+        >
+          Adicionar bolsas(s)
+        </button>
       </div>
     </div>
   </div>
@@ -97,6 +114,7 @@ export default {
   props: ["isModalAddCourseOpen"],
   components: { CourseCard },
   data: () => ({
+    checkSelecionados: null,
     teste: null,
     allCourse: [],
     filter: {
@@ -110,41 +128,104 @@ export default {
     allCities: null,
     allCourseFilteredByCity: null,
     courseFiltered: [],
+    courseSelected: [],
   }),
   methods: {
-    filteredCourse(){
-        console.log('filtrando')
-        
-        let filtered = this.allCourse.filter(x => 
-        ( x.campus.city == this.filter.city || this.filter.city == null)
-         && (x.course.name == this.filter.course || this.filter.course == null)
-         && (x.price_with_discount <= this.filter.moneyToPaid || this.filter.moneyToPaid == null)
-        );
+    addCourseToFavorite() {
+      if (this.courseSelected.length <= 0) return;
 
-        if(!this.filter.presencial || !this.filter.ead){
-            if(this.filter.presencial){
-                filtered = filtered.filter(x => ( x.course.kind.toUpperCase() == "Presencial".toUpperCase()) )
-            }
+      let cursosSelecionados = [];
+      let ponteiroCurso = null;
+      this.courseSelected.forEach((item) => {
+        ponteiroCurso = this.allCourse.filter((course) => {
+          if (course.id == item) return { ...course };
+        });
+        cursosSelecionados.push(ponteiroCurso[0]);
+      });
 
-            if(this.filter.ead){
-                filtered = filtered.filter(x => ( x.course.kind.toUpperCase() == "EaD".toUpperCase()) )
-            }
-        }
-
-        this.courseFiltered = filtered;
-
-        this.orderByUnivesity();
+      this.$emit("coursesToFavorite", cursosSelecionados);
+      this.closeModalAddCourse();
     },
-    orderByUnivesity(){
-        if(this.orderBy){
-            this.courseFiltered = this.courseFiltered.sort((a, b) => (a.university.name > b.university.name) ? 1 : -1)
-        }else{
-            this.courseFiltered = this.courseFiltered.sort((a, b) => (a.university.name < b.university.name) ? 1 : -1)
+    filteredCourse() {
+      console.log("filtrando");
+
+      let filtered = this.allCourse.filter(
+        (x) =>
+          (x.campus.city == this.filter.city || this.filter.city == null) &&
+          (x.course.name == this.filter.course || this.filter.course == null) &&
+          (x.price_with_discount <= this.filter.moneyToPaid ||
+            this.filter.moneyToPaid == null)
+      );
+
+      if (!this.filter.presencial || !this.filter.ead) {
+        if (this.filter.presencial) {
+          filtered = filtered.filter(
+            (x) => x.course.kind.toUpperCase() == "Presencial".toUpperCase()
+          );
         }
+
+        if (this.filter.ead) {
+          filtered = filtered.filter(
+            (x) => x.course.kind.toUpperCase() == "EaD".toUpperCase()
+          );
+        }
+      }
+
+      this.courseFiltered = filtered;
+
+      this.orderByUnivesity();
+    },
+    orderByUnivesity() {
+      if (this.orderBy) {
+        this.courseFiltered = this.courseFiltered.sort((a, b) =>
+          a.university.name > b.university.name ? 1 : -1
+        );
+      } else {
+        this.courseFiltered = this.courseFiltered.sort((a, b) =>
+          a.university.name < b.university.name ? 1 : -1
+        );
+      }
     },
     closeModalAddCourse() {
       this.$emit("closeModalAddCourse", false);
     },
+    changeSelectedCourse(course) {
+      console.log(this.courseSelected.includes(course));
+
+      if (this.courseSelected.includes(course)) {
+        let indice = this.courseSelected.indexOf(course);
+        this.courseSelected.splice(indice, 1);
+      } else {
+        this.courseSelected.push(course);
+      }
+
+      console.log(this.courseSelected);
+    },
+    // objectEquals(object1, object2){
+    //     var prop1 = Object.getOwnPropertyNames(object1);
+    //     var prop2 = Object.getOwnPropertyNames(object2);
+
+    //     if(prop1.length !== prop2.length)
+    //         return false;
+
+    //     if(prop1.length === 0)
+    //         if(object1 === object2)
+    //             return true;
+    //         else
+    //             return false;
+
+    //     for(var i = 0; i < prop1.length; i++) {
+    //         var prop = prop1[i];
+
+    //         if(object1[prop] !== object2[prop]){
+    //             if(this.objectEquals(object1[prop], object2[prop]))
+    //                 continue;
+    //             else
+    //                 return false;
+    //         }
+    //     }
+    //     return true;
+    // },
     getAllCities() {
       const allCities = this.allCourse.map((item) => item.campus.city);
 
@@ -165,18 +246,23 @@ export default {
       this.allCourseFilteredByCity = allOptionCourse.filter((item, pos) => {
         return allOptionCourse.indexOf(item) == pos;
       });
-      
-      this.filteredCourse()
+
+      this.filteredCourse();
     },
     orderByFaculdade() {
       this.orderBy = !this.orderBy;
-      this.orderByUnivesity()
+      this.orderByUnivesity();
+    },
+    createIds() {
+      const all = [...this.allCourse];
+      this.allCourse = all.map((item, index) => ({ id: index, ...item }));
     },
   },
   async mounted() {
     try {
       this.allCourse = await telaService.getAllCourse();
-      this.courseFiltered = this.allCourse
+      this.createIds();
+      this.courseFiltered = this.allCourse;
       this.orderByUnivesity();
     } catch (error) {
       console.log(error);
@@ -211,15 +297,14 @@ export default {
     background-color: white;
     opacity: 1;
 
-    &__action{
-        display: flex;
-        justify-content: space-between;
-        border-top: 2px solid rgba(31, 45, 48, 0.2);
-        padding-top:30px;
+    &__action {
+      display: flex;
+      justify-content: space-between;
+      border-top: 2px solid rgba(31, 45, 48, 0.2);
+      padding-top: 30px;
     }
-    &__list{
-        margin-top: 30px;
-        
+    &__list {
+      margin-top: 30px;
     }
     &__title {
       p {
@@ -332,20 +417,26 @@ export default {
     }
   }
 }
-.button{
-    background: white;
-    border:1px solid #007A8D;
-    padding: 20px;
-    font-size:1em;
-    border-radius:4px;
-    color: #007A8D;
-    font-weight: bolder;
+.button {
+  background: white;
+  border: 1px solid #007a8d;
+  padding: 20px;
+  font-size: 1em;
+  border-radius: 4px;
+  color: #007a8d;
+  font-weight: bolder;
 }
 
-.main{
-    background: #FDCB13;
-    border-color: #FDCB13;
-    color: #1F2D30;
+.main {
+  background: #fdcb13;
+  border-color: #fdcb13;
+  color: #1f2d30;
+}
+
+.disabled {
+  background: rgba(31, 45, 48, 0.3);
+  border-color: rgba(31, 45, 48, 0.3);
+  color: rgba(31, 45, 48, 0.7);
 }
 
 .chk input {
