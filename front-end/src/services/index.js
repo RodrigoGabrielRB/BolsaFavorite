@@ -1,3 +1,3 @@
-import telaService from './tela'
+import telaService from "./tela";
 
-export { telaService }
+export { telaService };

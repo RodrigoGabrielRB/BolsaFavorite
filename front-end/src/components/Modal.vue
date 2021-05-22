@@ -1,145 +1,378 @@
 <template>
   <div class="modal" v-show="isModalAddCourseOpen">
-      <div class="modal__x"><i class="fas fa-times"></i></div>
-      <div class="modal__content">
-        <div class="modal__content__title">
-            <h2>Adiconar Bolsa</h2>
-            <p>Filtre e adicione as bolsas de seu interesse.</p>
-            {{filter}}
-        </div>
-        <div class="modal__content__filter">
-            <p>Selecione sua cidade</p>
-            <select v-model="filter.city" @change="changeCity">
-                <option v-for="(city, index) in allCities" :key="index">{{city}}</option>
-            </select>
-        </div>
-        <div class="modal__content__filter">
-            <p>Selecione o curso de sua preferência</p>
-            <select v-model="filter.course">
-                <option v-for="(city, index) in allCourseFilteredByCity" :key="index">{{city}}</option>
-            </select>
-        </div>
-        <div class="modal__content__filter">
-            <input type="checkbox" v-model="filter.presencial"> Presencial
-            <input type="checkbox" v-model="filter.ead"> A distância
-        </div>
-        <div class="modal__content__filter">
-            Até quando pode pagar?
-            R${{filter.moneyToPaid}}
-            <input type="range" v-model="filter.moneyToPaid" min="1" max="10000">
-        </div>
-        <div class="modal__content__filter">
-            <div>Resultado:</div>
-            <div>Ordernar Por: 
-                <select>
-                    <option>Nome da Faculdade</option>
-                    <option>Pokemon</option>
-                </select>
-            </div>
-        </div>
-        {{teste}}
-        <div class="modal__content__list">
-           <div class="modal__content__list__item" v-for="(course, index) in allCourse" :key="index">
-               <div class="modal__content__list__item__checkbox">
-                   <input type="checkbox" :value="course">
-               </div>
-               <div class="modal__content__list__item__img">
-                   <img :src="course.university.logo_url">
-               </div>
-               <div class="modal__content__list__item__text">
-                   <p>{{course.course.name}}</p>
-                   <p>{{course.course.level}}</p>
-                   <p>Bolsa de <span>{{course.discount_percentage}}%</span></p>
-                   <p>R$ {{course.price_with_discount}}/mês</p>
-               </div>
-           </div>
+    <div class="modal__x" @click="closeModalAddCourse">
+      <i class="fas fa-times"></i>
+    </div>
+    <div class="modal__content">
+      <div class="modal__content__title">
+        <h2>Adiconar bolsa</h2>
+        <p>Filtre e adicione as bolsas de seu interesse.</p>
+      </div>
+      <div class="modal__content__filter">
+        <p>Selecione sua cidade</p>
+        <select v-model="filter.city" @change="changeCity">
+          <option v-for="(city, index) in allCities" :key="index">
+            {{ city }}
+          </option>
+        </select>
+      </div>
+      <div class="modal__content__filter">
+        <p>Selecione o curso de sua preferência</p>
+        <select v-model="filter.course" @change="filteredCourse">
+          <option v-for="(city, index) in allCourseFilteredByCity" :key="index">
+            {{ city }}
+          </option>
+        </select>
+      </div>
+      <div class="modal__content__filter">
+        <p>Como você quer estudar?</p>
+        <div class="modal__content__filter__checkboxes">
+          <div>
+            <label class="chk">
+              <input
+                type="checkbox"
+                v-model="filter.presencial"
+                @change="filteredCourse"
+                name="Presencial"
+              />
+              <span><i class="fas fa-check"></i></span>
+            </label>
+            <span class="labelName">Presencial</span>
+          </div>
+
+          <div>
+            <label class="chk">
+              <input type="checkbox" @change="filteredCourse" v-model="filter.ead" name="A distancia" />
+              <span><i class="fas fa-check"></i></span>
+            </label>
+            <span class="labelName">A distância</span>
+          </div>
         </div>
       </div>
+      <div class="modal__content__filter">
+        <p>Até quando pode pagar?</p>
+        <span class="moneyToPaid">R${{ filter.moneyToPaid }}</span>
+        <input type="range" @input="filteredCourse" v-model="filter.moneyToPaid" min="1" max="10000" />
+      </div>
+      <div class="modal__content__orderBy">
+        <div>Resultado:</div>
+        <div>
+          <p>Ordernar Por:</p>
+          <span @click="orderByFaculdade"
+            >Nome da Faculdade
+            <i
+              class="fas"
+              @click="orderByFaculdade"
+              :class="orderBy ? 'fa-chevron-down' : 'fa-chevron-up'"
+            ></i
+          ></span>
+        </div>
+      </div>
+      
+    
+      <div class="modal__content__list">
+        <div
+          class="modal__content__list__item"
+          v-for="(course, index) in courseFiltered"
+          :key="index"
+        >
+          <CourseCard :course="course"/>
+          
+        </div>
+      </div>
+
+      <div class="modal__content__action">
+          <button class="button" @click="closeModalAddCourse">Cancelar</button>
+          <button class="button main">Adicionar bolsas(s)</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-
-import { telaService } from '../services'
-
+import { telaService } from "../services";
+import CourseCard from "./CourseCard.vue";
 export default {
-    name: "Modal",
-    props: [
-        'isModalAddCourseOpen'
-    ],
-    data: () => ({
-        teste: null,
-        allCourse: null,
-        filter: {
-            city: null,
-            course: null,
-            presencial: false,
-            ead: false,
-            moneyToPaid: 10000,
-        },
+  name: "Modal",
+  props: ["isModalAddCourseOpen"],
+  components: { CourseCard },
+  data: () => ({
+    teste: null,
+    allCourse: [],
+    filter: {
+      city: null,
+      course: null,
+      presencial: false,
+      ead: false,
+      moneyToPaid: 10000,
+    },
+    orderBy: true,
+    allCities: null,
+    allCourseFilteredByCity: null,
+    courseFiltered: [],
+  }),
+  methods: {
+    filteredCourse(){
+        console.log('filtrando')
         
-        allCities: null,
-        allCourseFilteredByCity: null,
-    }),
-    methods: {
-        getAllCities(){
-            
-            const allCities = this.allCourse.map(item => item.campus.city);
+        let filtered = this.allCourse.filter(x => 
+        ( x.campus.city == this.filter.city || this.filter.city == null)
+         && (x.course.name == this.filter.course || this.filter.course == null)
+         && (x.price_with_discount <= this.filter.moneyToPaid || this.filter.moneyToPaid == null)
+        );
 
-            this.allCities = allCities.filter((item, pos) => {
-                                return allCities.indexOf(item) == pos;
-                            })  
-        },
-        changeCity(){
-            this.getAllCourseByCity(this.filter.city);
-        },
-        getAllCourseByCity(city){
-            const allCourse = this.allCourse.filter(item => item.campus.city == city);
+        if(!this.filter.presencial || !this.filter.ead){
+            if(this.filter.presencial){
+                filtered = filtered.filter(x => ( x.course.kind.toUpperCase() == "Presencial".toUpperCase()) )
+            }
 
-            const allOptionCourse = allCourse.map(item => item.course.name) 
+            if(this.filter.ead){
+                filtered = filtered.filter(x => ( x.course.kind.toUpperCase() == "EaD".toUpperCase()) )
+            }
+        }
 
-            this.allCourseFilteredByCity = allOptionCourse.filter((item, pos) => {
-                                return allOptionCourse.indexOf(item) == pos;
-                            })  
+        this.courseFiltered = filtered;
 
-            // this.allCourseFilteredByCity = 
+        this.orderByUnivesity();
+    },
+    orderByUnivesity(){
+        if(this.orderBy){
+            this.courseFiltered = this.courseFiltered.sort((a, b) => (a.university.name > b.university.name) ? 1 : -1)
+        }else{
+            this.courseFiltered = this.courseFiltered.sort((a, b) => (a.university.name < b.university.name) ? 1 : -1)
         }
     },
-    async mounted(){
-        try{
-            this.allCourse = await telaService.getAllCourse();
-        }catch(error){
-            console.log(error)
-        }finally{
-            console.log("reset login");
-        }
+    closeModalAddCourse() {
+      this.$emit("closeModalAddCourse", false);
+    },
+    getAllCities() {
+      const allCities = this.allCourse.map((item) => item.campus.city);
 
-        this.getAllCities();
+      this.allCities = allCities.filter((item, pos) => {
+        return allCities.indexOf(item) == pos;
+      });
+    },
+    changeCity() {
+      this.getAllCourseByCity(this.filter.city);
+    },
+    getAllCourseByCity(city) {
+      const allCourse = this.allCourse.filter(
+        (item) => item.campus.city == city
+      );
+
+      const allOptionCourse = allCourse.map((item) => item.course.name);
+
+      this.allCourseFilteredByCity = allOptionCourse.filter((item, pos) => {
+        return allOptionCourse.indexOf(item) == pos;
+      });
+      
+      this.filteredCourse()
+    },
+    orderByFaculdade() {
+      this.orderBy = !this.orderBy;
+      this.orderByUnivesity()
+    },
+  },
+  async mounted() {
+    try {
+      this.allCourse = await telaService.getAllCourse();
+      this.courseFiltered = this.allCourse
+      this.orderByUnivesity();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      console.log("reset login");
     }
-}
+
+    this.getAllCities();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-    .modal{
-        background-color:rgba(31,45,48,0.88);
-        z-index: 1;
-        position: absolute;
-        top: 0;
-        left:0;
-        width: 100%;
-        height: 100vh;
-        &__x{
-            color:white;
-            text-align: right;
-            padding: 10px 20px 10px 0;
-            font-size:2em;
-        }
-        &__content{
-            width: 100%;
-            padding: 20px;
-            background-color: white;
-            opacity:1;
-        }
-    }
+.modal {
+  color: #1f2d30;
+  background-color: rgba(31, 45, 48, 0.88);
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  &__x {
+    color: white;
+    text-align: right;
+    padding: 10px 20px 10px 0;
+    font-size: 2em;
+  }
+  &__content {
+    width: 100%;
+    padding: 24px;
+    background-color: white;
+    opacity: 1;
 
+    &__action{
+        display: flex;
+        justify-content: space-between;
+        border-top: 2px solid rgba(31, 45, 48, 0.2);
+        padding-top:30px;
+    }
+    &__list{
+        margin-top: 30px;
+        
+    }
+    &__title {
+      p {
+        margin-top: 5px;
+      }
+    }
+    &__orderBy {
+      font-weight: bold;
+      font-size: 1em;
+      display: flex;
+      justify-content: space-between;
+
+      div + div {
+        text-align: right;
+
+        span {
+          margin-top: 12px;
+          display: block;
+          color: #18acc4;
+        }
+      }
+    }
+    &__filter {
+      p {
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-top: 40px;
+        font-size: 0.9em;
+      }
+
+      .moneyToPaid {
+        display: block;
+        font-size: 1.4em;
+        margin: 2px;
+        width: 100%;
+        padding: 4px 0 0 0;
+        margin: 0;
+      }
+
+      select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+
+        width: 100%;
+        height: 50px;
+        font-size: 1.2em;
+        padding: 8px;
+        color: #1f2d30;
+        border: 1px solid rgba(31, 45, 48, 0.2);
+        border-radius: 6px;
+        background: white;
+        margin-top: 6px;
+
+        background: url(../assets/images/ui/arrow-down.svg) no-repeat right;
+        background-position-x: 96%;
+        outline: none;
+      }
+
+      input[type="range"] {
+        -webkit-appearance: none;
+        margin: 30px 0;
+        width: 100%;
+      }
+
+      input[type="range"]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 5px;
+        background: #18acc4;
+        border: none;
+        border-radius: 3px;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        border: 2px solid #18acc4;
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+        background: white;
+        margin-top: -16px;
+      }
+
+      input[type="range"]:focus {
+        outline: none;
+      }
+
+      input[type="range"]:focus::-webkit-slider-runnable-track {
+        background: #18acc4;
+      }
+
+      &__checkboxes {
+        display: flex;
+        padding: 30px 0 0;
+
+        div {
+          display: flex;
+          align-items: center;
+        }
+
+        .labelName {
+          font-size: 1.2em;
+          margin-left: 10px;
+        }
+
+        div + div {
+          margin-left: 16px;
+        }
+      }
+    }
+  }
+}
+.button{
+    background: white;
+    border:1px solid #007A8D;
+    padding: 20px;
+    font-size:1em;
+    border-radius:4px;
+    color: #007A8D;
+    font-weight: bolder;
+}
+
+.main{
+    background: #FDCB13;
+    border-color: #FDCB13;
+    color: #1F2D30;
+}
+
+.chk input {
+  display: none;
+}
+
+.chk span {
+  border-radius: 4px;
+  width: 26px;
+  height: 26px;
+  display: block;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-top: 2px;
+}
+
+.chk span i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: center;
+  color: white;
+  font-size: 0.8em;
+  margin-top: 6px;
+}
+
+.chk input:checked + span {
+  background-color: #18acc4;
+}
 </style>

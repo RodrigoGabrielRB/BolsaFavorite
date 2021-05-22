@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <Header/>
-    <Menu/>
-    <Navigator/>
-    <Content/>
-    <Footer/>
+    <Header />
+    <Menu />
+    <Navigator />
+    <Content />
+    <Footer />
   </div>
 </template>
 
@@ -19,19 +19,23 @@ import Footer from "./components/Footer.vue";
 export default {
   name: "App",
   components: {
-    Header, Menu, Footer, Navigator, Content,
+    Header,
+    Menu,
+    Footer,
+    Navigator,
+    Content,
   },
 };
 </script>
 
 <style lang="scss">
-*{
-  margin:0;
-  padding:0;
+* {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
-body{
-  background-color: #FBFBFB;
+body {
+  background-color: #fbfbfb;
   font-family: sans-serif;
 }
 // #app {

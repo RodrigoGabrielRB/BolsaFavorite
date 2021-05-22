@@ -7,18 +7,18 @@
 
 <script>
 export default {
-    name: "Navigator"
-}
+  name: "Navigator",
+};
 </script>
 
 <style lang="scss" scoped>
-.navigator{
-    background: white;
-    color: #18acc4;
-    font-weight: bold;
-    padding: 20px 15px;
-    i{
-        padding-right: 10px;
-    }
+.navigator {
+  background: white;
+  color: #18acc4;
+  font-weight: bold;
+  padding: 20px 15px;
+  i {
+    padding-right: 10px;
+  }
 }
 </style>
