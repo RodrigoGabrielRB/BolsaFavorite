@@ -1,9 +1,7 @@
 <template>
   <div class="menu">
     <div>Minha conta</div>
-    <nav>
-      Menu<i class="fas fa-chevron-down"></i>
-    </nav>
+    <nav>Menu<i class="fas fa-chevron-down"></i></nav>
   </div>
 </template>
 
@@ -21,7 +19,7 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 20px 15px;
-  i{
+  i {
     margin-left: 8px;
   }
 }
