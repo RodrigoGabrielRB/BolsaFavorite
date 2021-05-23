@@ -28,26 +28,30 @@
     <hr class="card__divisor" />
     <div class="card__price">
       <p>Mensailidades com o Quero Bolsa:</p>
-      <p class="card__price__fullPrice">R$ {{ course.full_price }}</p>
+      <p class="card__price__fullPrice">{{ course.full_price | reais }}</p>
       <p class="card__price__discount">
-        <span>R$ {{ course.price_with_discount }}</span> /mês
+        <span>{{ course.price_with_discount | reais }}</span> /mês
       </p>
     </div>
-    <div class="card__action"> 
+    <div class="card__action">
       <button class="button" @click="deleteCourse(course.id)">Excluir</button>
-      <button class="button" :class="course.enabled ? 'main' : 'disabled'">{{course.enabled ? 'Ver oferta' : 'Indisponivel'}}</button>
+      <button class="button" :class="course.enabled ? 'main' : 'disabled'">
+        {{ course.enabled ? "Ver oferta" : "Indisponivel" }}
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import MixinsGlobal from "@/mixins";
 import StarScore from "./StarScore";
 export default {
   props: ["course"],
+  mixins: [MixinsGlobal],
   components: { StarScore },
   methods: {
     deleteCourse(id) {
-      this.$emit("deleteCourse", id)
+      this.$emit("deleteCourse", id);
     },
   },
 };
@@ -123,8 +127,8 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
-    .main{
-      padding:10px 30px;
+    .main {
+      padding: 10px 30px;
     }
   }
 }

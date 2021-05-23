@@ -56,7 +56,7 @@
       </div>
       <div class="modal__content__filter">
         <p>Até quando pode pagar?</p>
-        <span class="moneyToPaid">R${{ filter.moneyToPaid }}</span>
+        <span class="moneyToPaid">R$ {{ filter.moneyToPaid }}</span>
         <input
           type="range"
           @input="filteredCourse"
@@ -108,9 +108,11 @@
 </template>
 
 <script>
+import MixinsGlobal from "@/mixins";
 import { telaService } from "../services";
 import CourseCard from "./CourseCard.vue";
 export default {
+  mixins: [MixinsGlobal],
   name: "Modal",
   props: ["isModalAddCourseOpen"],
   components: { CourseCard },
@@ -119,6 +121,7 @@ export default {
     triggerToRemoveCheckbox: 0,
     teste: null,
     allCourse: [],
+    moneyFilter: "",
     filter: {
       city: null,
       course: null,
@@ -191,17 +194,18 @@ export default {
       this.clearFilter();
       this.$emit("closeModalAddCourse", false);
     },
-    clearFilter(){
-      this.city = null
-      this.course = null
-      this.presencial = false
-      this.ead = false
-      this.moneyToPaid = 10000
-
+    clearFilter() {
+      this.filter.city = null;
+      this.filter.course = null;
+      this.filter.presencial = false;
+      this.filter.ead = false;
+      this.filter.moneyToPaid = 10000;
+      this.courseFiltered = this.allCourse;
+      this.orderByUnivesity();
     },
-    removeAllCheck(){
-        this.triggerToRemoveCheckbox += 1
-        this.courseSelected = []
+    removeAllCheck() {
+      this.triggerToRemoveCheckbox += 1;
+      this.courseSelected = [];
     },
     changeSelectedCourse(course) {
       if (this.courseSelected.includes(course)) {
@@ -262,14 +266,14 @@ export default {
 
 <style lang="scss" scoped>
 .modal {
-  position: fixed; 
-  z-index: 1; 
+  position: fixed;
+  z-index: 1;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto; 
-  background-color: rgba(31, 45, 48, 0.88); 
+  overflow: auto;
+  background-color: rgba(31, 45, 48, 0.88);
   &__x {
     color: white;
     text-align: right;

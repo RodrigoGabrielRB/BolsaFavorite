@@ -5,7 +5,7 @@
       <p>Ajuda</p>
     </div>
     <div class="header__logo">
-      <img src="../assets/images/logo-querobolsa.svg">
+      <img src="../assets/images/logo-querobolsa.svg" />
     </div>
     <div class="header__profile">
       <i class="far fa-user-circle"></i>
@@ -34,7 +34,7 @@ export default {
     color: #007a8d;
     i {
       color: #007a8d;
-      font-size:1.8em;
+      font-size: 1.8em;
     }
     p {
       margin-top: 5px;
@@ -48,7 +48,7 @@ export default {
   &__logo {
     width: 60%;
 
-    img{
+    img {
       width: 60%;
     }
   }

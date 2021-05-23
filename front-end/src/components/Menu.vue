@@ -1,7 +1,7 @@
 <template>
   <div class="menu">
     <div>Minha conta</div>
-    <nav>Menu</nav>
+    <nav>Menu<i class="fas fa-chevron-down"></i></nav>
   </div>
 </template>
 

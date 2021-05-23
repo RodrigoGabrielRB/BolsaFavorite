@@ -15,31 +15,34 @@
       <p class="card__course__discount">
         Bolsa de <span>{{ course.discount_percentage }}%</span>
       </p>
-      <p class="card__course__price">R$ {{ course.price_with_discount }}/mês</p>
+      <p class="card__course__price">
+        {{ course.price_with_discount | reais }}/mês
+      </p>
     </div>
   </div>
 </template>
 
 <script>
+import MixinsGlobal from "@/mixins";
 export default {
+  mixins: [MixinsGlobal],
   props: ["course", "removeAllcheckbox"],
   data: () => ({
-    valor:null
+    valor: null,
   }),
-  watch: { 
-    removeAllcheckbox: function() {
-      this.removeSelect()
-    }
+  watch: {
+    removeAllcheckbox: function () {
+      this.removeSelect();
+    },
   },
   methods: {
     selectCouse(course) {
       this.$emit("changeSelectedCourse", course.id);
     },
-    removeSelect(){
-      this.valor = false
-    }
+    removeSelect() {
+      this.valor = false;
+    },
   },
-  
 };
 </script>
 

@@ -56,54 +56,74 @@ export default {
   components: { Modal, CardFavorite },
   data: () => ({
     isModalAddCourseOpen: false,
-    filter: 'all', 
+    filter: "all",
     headerSemestre: [
-      { id: 1, name: "Todos os semestres", isActive: true , enrollment_semester: "all"},
-      { id: 2, name: "2º semestre de 2019", isActive: false , enrollment_semester: "2019.2"},
-      { id: 3, name: "1º semestre de 2020", isActive: false , enrollment_semester: "2020.1"},
+      {
+        id: 1,
+        name: "Todos os semestres",
+        isActive: true,
+        enrollment_semester: "all",
+      },
+      {
+        id: 2,
+        name: "2º semestre de 2019",
+        isActive: false,
+        enrollment_semester: "2019.2",
+      },
+      {
+        id: 3,
+        name: "1º semestre de 2020",
+        isActive: false,
+        enrollment_semester: "2020.1",
+      },
     ],
     favoriteCourse: [],
   }),
-  computed:{
-      favoriteCourseFiltered() {
-          return this.orderBySemester()
-      }
+  computed: {
+    favoriteCourseFiltered() {
+      return this.orderBySemester();
+    },
   },
   methods: {
-      deleteCourse(id){
-        let indice = this.favoriteCourse.indexOf(id);
-        this.favoriteCourse.splice(indice, 1);
-      },
+    deleteCourse(id) {
+      let indice = this.favoriteCourse.indexOf(id);
+      this.favoriteCourse.splice(indice, 1);
+    },
     closeModalAddCourse() {
       this.isModalAddCourseOpen = false;
     },
     addCourseToFavorite(courses) {
       let newFavoriteList = [];
-      let idsInFavorite = this.favoriteCourse.map(item => item.id);
-    
+      let idsInFavorite = this.favoriteCourse.map((item) => item.id);
+
       courses.map((item) => {
-          if(idsInFavorite.indexOf(item.id) < 0)
-            return newFavoriteList.push(item)
-         });
-      
-      this.favoriteCourse = [...this.favoriteCourse , ...newFavoriteList];
-      
+        if (idsInFavorite.indexOf(item.id) < 0)
+          return newFavoriteList.push(item);
+      });
+
+      this.favoriteCourse = [...this.favoriteCourse, ...newFavoriteList];
     },
-    orderBySemester(){
-        let filtered = [];
-        if(this.filter == "all"){
-            let allFilters = this.headerSemestre.map(item => item.enrollment_semester)
-            filtered = this.favoriteCourse.filter(item => allFilters.indexOf(item.enrollment_semester) >= 0)
-        }else{
-            filtered = this.favoriteCourse.filter(item => item.enrollment_semester == this.filter)
-        }
-        return filtered || []
+    orderBySemester() {
+      let filtered = [];
+      if (this.filter == "all") {
+        let allFilters = this.headerSemestre.map(
+          (item) => item.enrollment_semester
+        );
+        filtered = this.favoriteCourse.filter(
+          (item) => allFilters.indexOf(item.enrollment_semester) >= 0
+        );
+      } else {
+        filtered = this.favoriteCourse.filter(
+          (item) => item.enrollment_semester == this.filter
+        );
+      }
+      return filtered || [];
     },
     active(item) {
       this.desactiveAll();
       item.isActive = true;
-      this.filter = item.enrollment_semester
-      this.orderBySemester()
+      this.filter = item.enrollment_semester;
+      this.orderBySemester();
     },
     desactiveAll() {
       this.headerSemestre.forEach((item) => (item.isActive = false));
@@ -115,17 +135,16 @@ export default {
 <style lang="scss" scoped>
 .container {
   padding: 0px 20px;
-  &__title{
-      
-          color: #1F2D30;
-      h2{
-          font-size:2.2em;
-      }
-      p{
-          margin: 10px 0 0;
-          font-size:1.2em;
-          line-height: 1.4em;
-      }
+  &__title {
+    color: #1f2d30;
+    h2 {
+      font-size: 2.2em;
+    }
+    p {
+      margin: 10px 0 0;
+      font-size: 1.2em;
+      line-height: 1.4em;
+    }
   }
   &__filter {
     margin-top: 20px;
@@ -165,7 +184,7 @@ export default {
       text-align: center;
       border-radius: 6px;
       padding: 40px;
-      color: #1F2D30;
+      color: #1f2d30;
 
       &__plusCircle {
         color: #18acc4;
@@ -185,8 +204,8 @@ export default {
       &__label {
         font-size: 1.2em;
         line-height: 1.4em;
-        margin-top:6px;
-        color: #1F2D30;
+        margin-top: 6px;
+        color: #1f2d30;
       }
     }
   }

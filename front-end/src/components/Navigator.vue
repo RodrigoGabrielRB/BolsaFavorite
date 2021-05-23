@@ -1,7 +1,5 @@
 <template>
-  <div class="navigator">
-    <i class="fas fa-chevron-left"></i>Minha conta
-  </div>
+  <div class="navigator"><i class="fas fa-chevron-left"></i>Minha conta</div>
 </template>
 
 <script>
