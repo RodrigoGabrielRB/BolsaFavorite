@@ -34,7 +34,7 @@
       </div>
 
       <CardFavorite
-        v-for="course in favoriteCourse"
+        v-for="course in favoriteCourseFiltered"
         :key="course.id"
         :course="course"
         @deleteCourse="deleteCourse"
@@ -56,13 +56,19 @@ export default {
   components: { Modal, CardFavorite },
   data: () => ({
     isModalAddCourseOpen: false,
+    filter: 'all', 
     headerSemestre: [
-      { id: 1, name: "Todos os semestres", isActive: true },
-      { id: 2, name: "2º semestre de 2019", isActive: false },
-      { id: 3, name: "1º semestre de 2020", isActive: false },
+      { id: 1, name: "Todos os semestres", isActive: true , enrollment_semester: "all"},
+      { id: 2, name: "2º semestre de 2019", isActive: false , enrollment_semester: "2019.2"},
+      { id: 3, name: "1º semestre de 2020", isActive: false , enrollment_semester: "2020.1"},
     ],
     favoriteCourse: [],
   }),
+  computed:{
+      favoriteCourseFiltered() {
+          return this.orderBySemester()
+      }
+  },
   methods: {
       deleteCourse(id){
         let indice = this.favoriteCourse.indexOf(id);
@@ -72,15 +78,32 @@ export default {
       this.isModalAddCourseOpen = false;
     },
     addCourseToFavorite(courses) {
-      console.log(courses.length);
       let newFavoriteList = [];
-      courses.map((item) => newFavoriteList.push(item));
-      console.log(newFavoriteList);
-      this.favoriteCourse = [...newFavoriteList];
+      let idsInFavorite = this.favoriteCourse.map(item => item.id);
+    
+      courses.map((item) => {
+          if(idsInFavorite.indexOf(item.id) < 0)
+            return newFavoriteList.push(item)
+         });
+      
+      this.favoriteCourse = [...this.favoriteCourse , ...newFavoriteList];
+      
+    },
+    orderBySemester(){
+        let filtered = [];
+        if(this.filter == "all"){
+            let allFilters = this.headerSemestre.map(item => item.enrollment_semester)
+            filtered = this.favoriteCourse.filter(item => allFilters.indexOf(item.enrollment_semester) >= 0)
+        }else{
+            filtered = this.favoriteCourse.filter(item => item.enrollment_semester == this.filter)
+        }
+        return filtered || []
     },
     active(item) {
       this.desactiveAll();
       item.isActive = true;
+      this.filter = item.enrollment_semester
+      this.orderBySemester()
     },
     desactiveAll() {
       this.headerSemestre.forEach((item) => (item.isActive = false));

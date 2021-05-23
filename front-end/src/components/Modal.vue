@@ -188,7 +188,16 @@ export default {
     },
     closeModalAddCourse() {
       this.removeAllCheck();
+      this.clearFilter();
       this.$emit("closeModalAddCourse", false);
+    },
+    clearFilter(){
+      this.city = null
+      this.course = null
+      this.presencial = false
+      this.ead = false
+      this.moneyToPaid = 10000
+
     },
     removeAllCheck(){
         this.triggerToRemoveCheckbox += 1
