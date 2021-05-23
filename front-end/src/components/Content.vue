@@ -37,6 +37,7 @@
         v-for="course in favoriteCourse"
         :key="course.id"
         :course="course"
+        @deleteCourse="deleteCourse"
       />
     </div>
     <Modal
@@ -63,6 +64,10 @@ export default {
     favoriteCourse: [],
   }),
   methods: {
+      deleteCourse(id){
+        let indice = this.favoriteCourse.indexOf(id);
+        this.favoriteCourse.splice(indice, 1);
+      },
     closeModalAddCourse() {
       this.isModalAddCourseOpen = false;
     },
@@ -87,6 +92,18 @@ export default {
 <style lang="scss" scoped>
 .container {
   padding: 0px 20px;
+  &__title{
+      
+          color: #1F2D30;
+      h2{
+          font-size:2.2em;
+      }
+      p{
+          margin: 10px 0 0;
+          font-size:1.2em;
+          line-height: 1.4em;
+      }
+  }
   &__filter {
     margin-top: 20px;
     ul {
@@ -125,14 +142,16 @@ export default {
       text-align: center;
       border-radius: 6px;
       padding: 40px;
+      color: #1F2D30;
+
       &__plusCircle {
         color: #18acc4;
-        width: 158px;
-        height: 158px;
-        padding: 28px 22px;
+        width: 120px;
+        height: 120px;
+        padding: 24px 11px;
         margin: 0px auto;
-        font-size: 80px;
-        border: 8px solid #18acc4;
+        font-size: 60px;
+        border: 6px solid #18acc4;
         border-radius: 50%;
       }
       &__title {
@@ -141,7 +160,10 @@ export default {
         font-weight: bold;
       }
       &__label {
-        font-size: 1em;
+        font-size: 1.2em;
+        line-height: 1.4em;
+        margin-top:6px;
+        color: #1F2D30;
       }
     }
   }

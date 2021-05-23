@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card__checkbox">
       <label class="chk">
-        <input type="checkbox" @click="selectCouse(course)" />
+        <input type="checkbox" v-model="valor" @click="selectCouse(course)" />
         <span><i class="fas fa-check"></i></span>
       </label>
     </div>
@@ -22,12 +22,24 @@
 
 <script>
 export default {
-  props: ["course"],
+  props: ["course", "removeAllcheckbox"],
+  data: () => ({
+    valor:null
+  }),
+  watch: { 
+    removeAllcheckbox: function() {
+      this.removeSelect()
+    }
+  },
   methods: {
     selectCouse(course) {
       this.$emit("changeSelectedCourse", course.id);
     },
+    removeSelect(){
+      this.valor = false
+    }
   },
+  
 };
 </script>
 

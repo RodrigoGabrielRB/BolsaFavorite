@@ -33,9 +33,9 @@
         <span>R$ {{ course.price_with_discount }}</span> /mês
       </p>
     </div>
-    <div class="card__action">
-      <button class="button">Excluir</button>
-      <button class="button main">Ver oferta</button>
+    <div class="card__action"> 
+      <button class="button" @click="deleteCourse(course.id)">Excluir</button>
+      <button class="button" :class="course.enabled ? 'main' : 'disabled'">{{course.enabled ? 'Ver oferta' : 'Indisponivel'}}</button>
     </div>
   </div>
 </template>
@@ -46,9 +46,8 @@ export default {
   props: ["course"],
   components: { StarScore },
   methods: {
-    selectCouse(course) {
-      console.log(course);
-      this.$emit("changeSelectedCourse", course.id);
+    deleteCourse(id) {
+      this.$emit("deleteCourse", id)
     },
   },
 };
@@ -124,11 +123,8 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
-    button {
-      padding: 10px 30px;
-    }
-    .main {
-      padding: 20px 45px;
+    .main{
+      padding:10px 30px;
     }
   }
 }

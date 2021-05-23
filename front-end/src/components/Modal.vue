@@ -5,7 +5,7 @@
     </div>
     <div class="modal__content">
       <div class="modal__content__title">
-        <h2>Adiconar bolsa</h2>
+        <h2>Adicionar bolsa</h2>
         <p>Filtre e adicione as bolsas de seu interesse.</p>
       </div>
       <div class="modal__content__filter">
@@ -88,6 +88,7 @@
           <CourseCard
             @changeSelectedCourse="changeSelectedCourse"
             :course="course"
+            :removeAllcheckbox="triggerToRemoveCheckbox"
           />
         </div>
       </div>
@@ -115,6 +116,7 @@ export default {
   components: { CourseCard },
   data: () => ({
     checkSelecionados: null,
+    triggerToRemoveCheckbox: 0,
     teste: null,
     allCourse: [],
     filter: {
@@ -185,7 +187,12 @@ export default {
       }
     },
     closeModalAddCourse() {
+      this.removeAllCheck();
       this.$emit("closeModalAddCourse", false);
+    },
+    removeAllCheck(){
+        this.triggerToRemoveCheckbox += 1
+        this.courseSelected = []
     },
     changeSelectedCourse(course) {
       if (this.courseSelected.includes(course)) {
@@ -246,14 +253,14 @@ export default {
 
 <style lang="scss" scoped>
 .modal {
-  color: #1f2d30;
-  background-color: rgba(31, 45, 48, 0.88);
-  z-index: 1;
-  position: absolute;
-  top: 0;
+  position: fixed; 
+  z-index: 1; 
   left: 0;
+  top: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  overflow: auto; 
+  background-color: rgba(31, 45, 48, 0.88); 
   &__x {
     color: white;
     text-align: right;
