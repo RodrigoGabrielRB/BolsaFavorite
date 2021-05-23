@@ -147,8 +147,6 @@ export default {
       this.closeModalAddCourse();
     },
     filteredCourse() {
-      console.log("filtrando");
-
       let filtered = this.allCourse.filter(
         (x) =>
           (x.campus.city == this.filter.city || this.filter.city == null) &&
@@ -190,42 +188,13 @@ export default {
       this.$emit("closeModalAddCourse", false);
     },
     changeSelectedCourse(course) {
-      console.log(this.courseSelected.includes(course));
-
       if (this.courseSelected.includes(course)) {
         let indice = this.courseSelected.indexOf(course);
         this.courseSelected.splice(indice, 1);
       } else {
         this.courseSelected.push(course);
       }
-
-      console.log(this.courseSelected);
     },
-    // objectEquals(object1, object2){
-    //     var prop1 = Object.getOwnPropertyNames(object1);
-    //     var prop2 = Object.getOwnPropertyNames(object2);
-
-    //     if(prop1.length !== prop2.length)
-    //         return false;
-
-    //     if(prop1.length === 0)
-    //         if(object1 === object2)
-    //             return true;
-    //         else
-    //             return false;
-
-    //     for(var i = 0; i < prop1.length; i++) {
-    //         var prop = prop1[i];
-
-    //         if(object1[prop] !== object2[prop]){
-    //             if(this.objectEquals(object1[prop], object2[prop]))
-    //                 continue;
-    //             else
-    //                 return false;
-    //         }
-    //     }
-    //     return true;
-    // },
     getAllCities() {
       const allCities = this.allCourse.map((item) => item.campus.city);
 

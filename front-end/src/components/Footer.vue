@@ -39,6 +39,7 @@ export default {};
   &__cards {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
 
     &__text {
       margin: 0 auto;
@@ -59,15 +60,11 @@ export default {};
       flex-direction: column;
       align-items: center;
       padding: 20px;
-      width: calc(33.5% - 6px);
-      margin-right: 8px;
+      width: 33%;
       span {
         margin-top: 10px;
         font-weight: bold;
       }
-    }
-    &__card:last-child {
-      margin-right: 0;
     }
   }
   &__madeIn {

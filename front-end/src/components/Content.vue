@@ -32,20 +32,17 @@
           Clique aqui para adicionar bolsas de cursos do seu interesse
         </p>
       </div>
-      <CardFavorite />
-      <div class="container__containerCards__card">
-        <div class="container__containerCards__card__plusCircle">
-          <i class="fas fa-plus"></i>
-        </div>
-        <p class="container__containerCards__card__title">Adicionar bolsa</p>
-        <p class="container__containerCards__card__label">
-          Clique aqui para adicionar bolsas de cursos do seu interesse
-        </p>
-      </div>
+
+      <CardFavorite
+        v-for="course in favoriteCourse"
+        :key="course.id"
+        :course="course"
+      />
     </div>
     <Modal
       :isModalAddCourseOpen="isModalAddCourseOpen"
       @closeModalAddCourse="closeModalAddCourse"
+      @coursesToFavorite="addCourseToFavorite"
     />
   </div>
 </template>
@@ -63,10 +60,18 @@ export default {
       { id: 2, name: "2º semestre de 2019", isActive: false },
       { id: 3, name: "1º semestre de 2020", isActive: false },
     ],
+    favoriteCourse: [],
   }),
   methods: {
     closeModalAddCourse() {
       this.isModalAddCourseOpen = false;
+    },
+    addCourseToFavorite(courses) {
+      console.log(courses.length);
+      let newFavoriteList = [];
+      courses.map((item) => newFavoriteList.push(item));
+      console.log(newFavoriteList);
+      this.favoriteCourse = [...newFavoriteList];
     },
     active(item) {
       this.desactiveAll();

@@ -25,7 +25,6 @@ export default {
   props: ["course"],
   methods: {
     selectCouse(course) {
-      console.log(course);
       this.$emit("changeSelectedCourse", course.id);
     },
   },
